@@ -21,7 +21,7 @@ describe Rly::Grammar do
     let(:grammar) { Rly::Grammar.new([]) }
 
     it "allows to set precedence" do
-      expect{ grammar.set_precedence('+', :left, 1) }.to_not raise_error
+      expect { grammar.set_precedence('+', :left, 1) }.to_not raise_error
     end
 
     it "does not allow to set precedence after any productions have been added" do
@@ -88,7 +88,7 @@ describe Rly::Grammar do
     end
 
     it "adds production to the list of non-terminals" do
-      p = grammar.add_production(:expression, [:expression, '+', :expression])
+      grammar.add_production(:expression, [:expression, '+', :expression])
       expect(grammar.nonterminals[:expression]).to_not be_nil
     end
 
@@ -112,7 +112,7 @@ describe Rly::Grammar do
     let(:grammar) do
       Rly::Grammar.new([]).tap do |g|
         g.add_production(:expression, [:expression, '+', :expression])
-        g.set_start()
+        g.set_start
       end
     end
 
@@ -126,16 +126,16 @@ describe Rly::Grammar do
 
     it "accepts only existing non-terminal as a start" do
       g = Rly::Grammar.new([:NUMBER])
-      p = g.add_production(:expression, [:expression, '+', :expression])
+      g.add_production(:expression, [:expression, '+', :expression])
       expect { g.set_start(:NUMBER) } .to raise_error(ArgumentError)
       expect { g.set_start(:new_sym) } .to raise_error(ArgumentError)
     end
 
     it "sets zero rule to :S' -> :start" do
-      prod_0 = grammar.productions[0]
-      expect(prod_0.index).to eq(0)
-      expect(prod_0.name).to eq(:"S'")
-      expect(prod_0.prod).to eq([:expression])
+      production = grammar.productions[0]
+      expect(production.index).to eq(0)
+      expect(production.name).to eq(:"S'")
+      expect(production.prod).to eq([:expression])
     end
 
     it "adds 0 to start rule nonterminals" do
@@ -184,7 +184,7 @@ describe Rly::Grammar do
 
     it "builds correct FIRST table" do
       first = grammar.compute_first
-      expect(first).to eq({
+      expect(first).to eq(
         :'$end' => [:'$end'],
         '+' => ['+'],
         '-' => ['-'],
@@ -192,13 +192,13 @@ describe Rly::Grammar do
         error: [:error],
         expression: [:NUMBER],
         statement: [:NUMBER]
-      })
+      )
     end
 
     it "builds correct FOLLOW table" do
       grammar.compute_first
       follow = grammar.compute_follow
-      expect(follow).to eq({ expression: [:'$end', '+', '-'], statement: [:'$end'] })
+      expect(follow).to eq(expression: [:'$end', '+', '-'], statement: [:'$end'])
     end
   end
 

@@ -65,7 +65,7 @@ describe Rly::LRTable do
     ]
 
     expect(lr0_items.length).to eq(reflist.length)
-    expect(lr0_items.map { |a| a.map { |k| k.to_s } .join('|') }).to eq(reflist)
+    expect(lr0_items.map { |a| a.map(&:to_s) .join('|') }).to eq(reflist)
   end
 
   it "creates a dictionary containing all of the non-terminals that might produce an empty production" do
@@ -83,42 +83,42 @@ describe Rly::LRTable do
   end
 
   it "computes the DR(p,A) relationships for non-terminal transitions" do
-    expect(table.send :dr_relation, lr0_items, transitions[0], nullable).to eq([:'$end'])
-    expect(table.send :dr_relation, lr0_items, transitions[1], nullable).to eq(['+', '-'])
+    expect(table.send(:dr_relation, lr0_items, transitions[0], nullable)).to eq([:'$end'])
+    expect(table.send(:dr_relation, lr0_items, transitions[1], nullable)).to eq(['+', '-'])
   end
 
   it "computes the READS() relation (p,A) READS (t,C)" do
     # TODO: write a better spec
-    expect(table.send :reads_relation, lr0_items, transitions[0], nullable).to eq([])
-    expect(table.send :reads_relation, lr0_items, transitions[1], nullable).to eq([])
+    expect(table.send(:reads_relation, lr0_items, transitions[0], nullable)).to eq([])
+    expect(table.send(:reads_relation, lr0_items, transitions[1], nullable)).to eq([])
   end
 
   it "computes the read sets given a set of LR(0) items" do
     result = table.send(:compute_read_sets, lr0_items, transitions, nullable)
 
-    expect(result).to eq({
-      [0, :statement]  => [:'$end'],
+    expect(result).to eq(
+      [0, :statement] => [:'$end'],
       [5, :expression] => ['+', '-'],
       [4, :expression] => ['+', '-'],
       [0, :expression] => ['+', '-']
-    })
+    )
   end
 
   it "determines the lookback and includes relations" do
     lookd, included = table.send(:compute_lookback_includes, lr0_items, transitions, nullable)
 
-    expect(included).to eq({
-      [5, :expression] => [ [0, :expression], [4, :expression], [5, :expression], [5, :expression] ],
-      [4, :expression] => [ [0, :expression], [4, :expression], [4, :expression], [5, :expression] ],
-      [0, :expression] => [ [0, :statement] ]
-    })
+    expect(included).to eq(
+      [5, :expression] => [[0, :expression], [4, :expression], [5, :expression], [5, :expression]],
+      [4, :expression] => [[0, :expression], [4, :expression], [4, :expression], [5, :expression]],
+      [0, :expression] => [[0, :statement]]
+    )
 
-    lookd = lookd.each_with_object({}) { |(k, v), h| h[k] = v.map { |n,i| [n, i.to_s] } }
+    lookd = lookd.each_with_object({}) { |(k, v), h| h[k] = v.map { |n, i| [n, i.to_s] } }
 
     # NOTE: this one goes not map 1-1 to pry as we have differences in lr0_items order. Looks valid though.
     expected = {
-      [0, :statement] => [ [2, "statement -> expression ."] ],
-      [0, :expression]=> [
+      [0, :statement] => [[2, "statement -> expression ."]],
+      [0, :expression] => [
         [6, "expression -> expression + expression ."],
         [6, "expression -> expression . + expression"],
         [6, "expression -> expression . - expression"],
@@ -128,7 +128,7 @@ describe Rly::LRTable do
         [3, "expression -> NUMBER ."]
       ],
       [4, :expression] => [
-      [6, "expression -> expression + expression ."],
+        [6, "expression -> expression + expression ."],
         [6, "expression -> expression . + expression"],
         [6, "expression -> expression . - expression"],
         [7, "expression -> expression - expression ."],
@@ -144,7 +144,8 @@ describe Rly::LRTable do
         [7, "expression -> expression . + expression"],
         [7, "expression -> expression . - expression"],
         [3, "expression -> NUMBER ."]
-      ]}
+      ]
+    }
 
     expect(lookd).to eq(expected)
   end
@@ -154,12 +155,12 @@ describe Rly::LRTable do
     _, included = table.send(:compute_lookback_includes, lr0_items, transitions, nullable)
 
     followsets = table.send(:compute_follow_sets, transitions, readsets, included)
-    expect(followsets).to eq({
+    expect(followsets).to eq(
       [0, :statement] => [:'$end'],
       [5, :expression] => ['+', '-', :'$end'],
       [4, :expression] => ['+', '-', :'$end'],
       [0, :expression] => ['+', '-', :'$end']
-    })
+    )
   end
 
   it "attaches the lookahead symbols to grammar rules" do
@@ -168,7 +169,7 @@ describe Rly::LRTable do
     lookd, included = table.send(:compute_lookback_includes, lr0_items, transitions, nullable)
     followsets = table.send(:compute_follow_sets, transitions, readsets, included)
 
-    result = table.send(:add_lookaheads, lookd, followsets)
+    table.send(:add_lookaheads, lookd, followsets)
   end
 
   it "parses the table" do

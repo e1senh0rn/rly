@@ -28,8 +28,8 @@ module CalcSpecExample
     precedence :left,  '*', '/'
     precedence :right, :UMINUS
 
-    rule 'statement : NAME "=" expression' do |st, n, _, e|
-      self.names[n.value] = e.value
+    rule 'statement : NAME "=" expression' do |_st, n, _, e|
+      names[n.value] = e.value
     end
 
     rule 'statement : expression' do |st, e|
@@ -56,7 +56,7 @@ module CalcSpecExample
     end
 
     rule 'expression : NAME' do |ex, n|
-      nval = self.names[n.value]
+      nval = names[n.value]
       unless nval
         puts "Undefined name '#{n.value}'"
         nval = 0
