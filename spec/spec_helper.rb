@@ -1,5 +1,6 @@
 require "rubygems"
 require "bundler/setup"
+require "./spec/support/fixture_helpers"
 
 require "simplecov"
 SimpleCov.minimum_coverage 100
@@ -22,4 +23,7 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
+
+  config.add_setting :file_fixture_path, default: 'spec/fixtures/files'
+  config.include FixtureHelpers
 end
