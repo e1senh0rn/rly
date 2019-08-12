@@ -1,17 +1,16 @@
 require "rubygems"
-require "bundler/setup"
+require "bundler"
+Bundler.setup :default, :development, :test
+require 'pry'
+
 require "./spec/support/fixture_helpers"
 
-require "simplecov"
-SimpleCov.minimum_coverage 100
-SimpleCov.start do
-  add_filter '/spec/'
-end if ENV["COVERAGE"] == 'true'
-
-begin
-  require "pry-nav"
-rescue LoadError
-  #
+if ENV["COVERAGE"] == 'true'
+  require "simplecov"
+  SimpleCov.minimum_coverage 100
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
 end
 
 RSpec.configure do |config|
