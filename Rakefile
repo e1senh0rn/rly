@@ -14,7 +14,7 @@ RSpec::Core::RakeTask.new('spec')
 #   measurement.output = 'measurement/report.txt'
 # end
 
-task :default => :spec
+task default: :spec
 
 namespace :spec do
   desc "Create rspec coverage"

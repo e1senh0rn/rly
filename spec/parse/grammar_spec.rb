@@ -188,17 +188,17 @@ describe Rly::Grammar do
         :'$end' => [:'$end'],
         '+' => ['+'],
         '-' => ['-'],
-        :NUMBER => [:NUMBER],
-        :error => [:error],
-        :expression => [:NUMBER],
-        :statement => [:NUMBER]
+        NUMBER: [:NUMBER],
+        error: [:error],
+        expression: [:NUMBER],
+        statement: [:NUMBER]
       })
     end
 
     it "builds correct FOLLOW table" do
       grammar.compute_first
       follow = grammar.compute_follow
-      expect(follow).to eq({ :expression => [:'$end', '+', '-'], :statement => [:'$end'] })
+      expect(follow).to eq({ expression: [:'$end', '+', '-'], statement: [:'$end'] })
     end
   end
 
