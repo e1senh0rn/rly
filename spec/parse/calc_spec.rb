@@ -75,24 +75,22 @@ module CalcSpecExample
 end
 
 describe 'Calculator' do
-  before :each do
-    @calc = CalcSpecExample::CalcParse.new(CalcSpecExample::CalcLex.new)
-  end
+  let(:calc) { CalcSpecExample::CalcParse.new(CalcSpecExample::CalcLex.new) }
 
   it "calculates simple expressions" do
-    @calc.parse('2 + 2').should == 4
+    expect(calc.parse('2 + 2')).to eq(4)
   end
 
   it "calculates complex expressions" do
-    @calc.parse('(3-1)*6/(3+1)').should == 3
+    expect(calc.parse('(3-1)*6/(3+1)')).to eq(3)
   end
 
   it "keeps state between parses" do
-    @calc.parse('magic = 42')
-    @calc.parse('2 * magic').should == 84
+    calc.parse('magic = 42')
+    expect(calc.parse('2 * magic')).to eq(84)
   end
 
   it "follows special case precedence rules" do
-    @calc.parse('2 + - 2 + 1').should == 1
+    expect(calc.parse('2 + - 2 + 1')).to eq(1)
   end
 end

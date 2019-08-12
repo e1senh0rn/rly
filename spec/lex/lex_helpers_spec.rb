@@ -7,7 +7,7 @@ describe "Rly::Lex Helpers" do
       ignore_spaces_and_tabs
     end
 
-    expect { testLexer.new(" \t \t").next }.not_to raise_exception
+    expect { testLexer.new(" \t \t").next }.to_not raise_exception
   end
 
   it "has a helper to parse numeric tokens" do
@@ -16,8 +16,8 @@ describe "Rly::Lex Helpers" do
     end
 
     tok = testLexer.new("123").next
-    tok.type.should == :NUMBER
-    tok.value.should == 123
+    expect(tok.type).to eq(:NUMBER)
+    expect(tok.value).to eq(123)
   end
 
   it "has a helper to parse double-quoted string tokens" do
@@ -26,7 +26,7 @@ describe "Rly::Lex Helpers" do
     end
 
     tok = testLexer.new('"a test"').next
-    tok.type.should == :STRING
-    tok.value.should == 'a test'
+    expect(tok.type).to eq(:STRING)
+    expect(tok.value).to eq('a test')
   end
 end

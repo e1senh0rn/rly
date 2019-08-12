@@ -14,7 +14,7 @@ describe "Rly::Yacc Helpers" do
     end
 
     p = testParser.new
-    p.parse("test").should == "stmttestend"
+    expect(p.parse("test")).to eq("stmttestend")
   end
 
   context "rhs value assignment" do
@@ -29,7 +29,7 @@ describe "Rly::Yacc Helpers" do
       end
 
       p = testParser.new
-      p.parse("test").should == "test"
+      expect(p.parse("test")).to eq("test")
     end
 
     it "has a helper to assign one given rhs value" do
@@ -43,7 +43,7 @@ describe "Rly::Yacc Helpers" do
       end
 
       p = testParser.new
-      p.parse("[test]").should == "test"
+      expect(p.parse("[test]")).to eq("test")
     end
 
     it "has a helper to assign first rhs value, assigning nil, if the value is not present" do
@@ -62,7 +62,7 @@ describe "Rly::Yacc Helpers" do
       end
 
       p = testParser.new
-      p.parse("test").should == ["test", nil]
+      expect(p.parse("test")).to eq(["test", nil])
     end
   end
 
@@ -79,7 +79,7 @@ describe "Rly::Yacc Helpers" do
       end
 
       p = testParser.new
-      p.parse("a b c").should == %w[a b c]
+      expect(p.parse("a b c")).to eq(%w[a b c])
     end
 
     it "works, when there are separators between values" do
@@ -94,7 +94,7 @@ describe "Rly::Yacc Helpers" do
       end
 
       p = testParser.new
-      p.parse("a,b,c").should == %w[a b c]
+      expect(p.parse("a,b,c")).to eq(%w[a b c])
     end
   end
 

@@ -8,7 +8,7 @@ describe Rly::Lex do
     end
 
     it "has a list of defined tokens" do
-      testLexer.tokens.map { |t, r, b| t }.should == [:FIRST, :SECOND]
+      expect(testLexer.tokens.map { |t, r, b| t }).to eq([:FIRST, :SECOND])
     end
 
     it "outputs tokens one by one" do
@@ -16,22 +16,22 @@ describe Rly::Lex do
       l = testLexer.new(test)
 
       tok = l.next
-      tok.type.should == :FIRST
-      tok.value.should == 'qwe'
+      expect(tok.type).to eq(:FIRST)
+      expect(tok.value).to eq('qwe')
 
       tok = l.next
-      tok.type.should == :SECOND
-      tok.value.should == 'ASD'
+      expect(tok.type).to eq(:SECOND)
+      expect(tok.value).to eq('ASD')
 
       tok = l.next
-      tok.type.should == :FIRST
-      tok.value.should == 'zxc'
+      expect(tok.type).to eq(:FIRST)
+      expect(tok.value).to eq('zxc')
 
-      l.next.should be_nil
+      expect(l.next).to be_nil
     end
 
     it "provides tokens in terminals list" do
-      testLexer.terminals.should == [:FIRST, :SECOND]
+      expect(testLexer.terminals).to eq([:FIRST, :SECOND])
     end
   end
 
@@ -39,19 +39,19 @@ describe Rly::Lex do
     testLexer = Class.new(Rly::Lex) do
       literals "+-*/"
     end
-    
+
     it "outputs literal tokens" do
       test = '++--'
       l = testLexer.new(test)
 
-      l.next.value.should == '+'
-      l.next.value.should == '+'
-      l.next.value.should == '-'
-      l.next.value.should == '-'
+      expect(l.next.value).to eq('+')
+      expect(l.next.value).to eq('+')
+      expect(l.next.value).to eq('-')
+      expect(l.next.value).to eq('-')
     end
 
     it "provides literals in terminals list" do
-      testLexer.terminals.should == ['+', '-', '*', '/']
+      expect(testLexer.terminals).to eq(['+', '-', '*', '/'])
     end
   end
 
@@ -59,12 +59,12 @@ describe Rly::Lex do
     testLexer = Class.new(Rly::Lex) do
       ignore " \t"
     end
-    
+
     it "honours ignores list" do
       test = "     \t\t  \t    \t"
       l = testLexer.new(test)
 
-      l.next.should be_nil
+      expect(l.next).to be_nil
     end
   end
 
@@ -75,12 +75,12 @@ describe Rly::Lex do
         t
       end
     end
-    
+
     it "calls a block to further process a token" do
       test = "42"
       l = testLexer.new(test)
 
-      l.next.value.should == 42
+      expect(l.next.value).to eq(42)
     end
   end
 
@@ -88,14 +88,14 @@ describe Rly::Lex do
     testLexer = Class.new(Rly::Lex) do
       token /\n+/ do |t| t.lexer.lineno = t.value.count("\n"); t end
     end
-    
+
     it "processes but don't output tokens without a name" do
       test = "\n\n\n"
       l = testLexer.new(test)
 
-      l.next.should be_nil
+      expect(l.next).to be_nil
 
-      l.lineno.should == 3
+      expect(l.lineno).to eq(3)
     end
   end
 
@@ -130,12 +130,12 @@ describe Rly::Lex do
       l = testLexer.new("test")
 
       tok = l.next
-      tok.value.should == "BAD t"
-      tok.type.should == :error
+      expect(tok.value).to eq("BAD t")
+      expect(tok.type).to eq(:error)
 
       tok = l.next
-      tok.value.should == "BAD e"
-      tok.type.should == :error
+      expect(tok.value).to eq("BAD e")
+      expect(tok.type).to eq(:error)
     end
 
     it "calls an error function if it is available, which can skip a token" do
@@ -148,7 +148,7 @@ describe Rly::Lex do
       end
       l = testLexer.new("test1")
 
-      l.next.value.should == '1'
+      expect(l.next.value).to eq('1')
     end
   end
 
@@ -159,7 +159,7 @@ describe Rly::Lex do
       end
       l = testLexer.new(",10")
 
-      l.next.type.should == ','
-      l.next.type.should == :NUM
+      expect(l.next.type).to eq(',')
+      expect(l.next.type).to eq(:NUM)
   end
 end
